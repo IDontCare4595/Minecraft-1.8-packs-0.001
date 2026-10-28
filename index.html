@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft Texture Pack Directory</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --mc-black: #000000;
+      --mc-dark-blue: #0000aa;
+      --mc-dark-green: #00aa00;
+      --mc-dark-aqua: #00aaaa;
+      --mc-dark-red: #aa0000;
+      --mc-dark-purple: #aa00aa;
+      --mc-gold: #ffaa00;
+      --mc-gray: #aaaaaa;
+      --mc-dark-gray: #555555;
+      --mc-blue: #5555ff;
+      --mc-green: #55ff55;
+      --mc-aqua: #55ffff;
+      --mc-red: #ff5555;
+      --mc-light-purple: #ff55ff;
+      --mc-yellow: #ffff55;
+      --mc-white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 20px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .stats {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+    }
+
+    .filter-btn {
+      padding: 12px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary);
+      color: #000;
+      border-color: var(--primary);
+      font-weight: bold;
+    }
+
+    .pack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .pack-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .pack-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+
+    .pack-title {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      word-break: break-word;
+      font-family: monospace;
+      min-height: 2.4em;
+    }
+
+    .pack-meta {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #334155;
+      color: #cbd5e1;
+    }
+
+    .badge-res {
+      background: #0284c7;
+      color: #fff;
+    }
+
+    .download-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      text-align: center;
+      background: var(--primary);
+      color: #0f172a;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .download-btn:hover {
+      background: var(--primary-hover);
+      color: #fff;
+    }
+
+    /* Minecraft Color Codes */
+    .mc-0 { color: var(--mc-black); }
+    .mc-1 { color: var(--mc-dark-blue); }
+    .mc-2 { color: var(--mc-dark-green); }
+    .mc-3 { color: var(--mc-dark-aqua); }
+    .mc-4 { color: var(--mc-dark-red); }
+    .mc-5 { color: var(--mc-dark-purple); }
+    .mc-6 { color: var(--mc-gold); }
+    .mc-7 { color: var(--mc-gray); }
+    .mc-8 { color: var(--mc-dark-gray); }
+    .mc-9 { color: var(--mc-blue); }
+    .mc-a { color: var(--mc-green); }
+    .mc-b { color: var(--mc-aqua); }
+    .mc-c { color: var(--mc-red); }
+    .mc-d { color: var(--mc-light-purple); }
+    .mc-e { color: var(--mc-yellow); }
+    .mc-f { color: var(--mc-white); }
+    .mc-l { font-weight: bold; }
+    .mc-o { font-style: italic; }
+    .mc-n { text-decoration: underline; }
+    .mc-m { text-decoration: line-through; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Minecraft Texture Pack Directory</h1>
+      <div class="stats" id="packCount">0 Packs Found</div>
+    </header>
+
+    <div class="controls">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search pack name..." oninput="filterPacks()">
+      </div>
+      <button class="filter-btn active" onclick="setFilter('all', this)">Show All</button>
+      <button class="filter-btn" onclick="setFilter('16x', this)">16x</button>
+      <button class="filter-btn" onclick="setFilter('32x', this)">32x</button>
+      <button class="filter-btn" onclick="setFilter('64x', this)">64x</button>
+      <button class="filter-btn" onclick="setFilter('128x+', this)">128x+</button>
+    </div>
+
+    <div class="pack-grid" id="packGrid"></div>
+  </div>
+
+  <script>
+    const rawLinks = [
+      "https://www.mediafire.com/file/qzyzd03dpp4pb3c/top_bridge_warrior.zip/file",
+      "https://www.mediafire.com/file/3g5it8p89sn9aip/6Luct5r6ah_V1.zip/file",
+      "https://www.mediafire.com/file/igde9pozy2sijrx/trollfault_16x.zip/file",
+      "http://www.mediafire.com/file/qqm6smuqe6gbsx4/%2523%25C2%25A7cOTF.zip/file",
+      "https://www.mediafire.com/file/bc3yx8wnm1kvq9q/construct+private.zip/file",
+      "https://www.mediafire.com/file/km3rwb1kipf5w7a/clAlaric.zip/file",
+      "https://www.mediafire.com/file/kjlb1apaz3zapsl/ecket_rbw_overlay_UPDATED.rar/file",
+      "https://www.mediafire.com/file/q214wexmjuyekdu/cool_dude_15k_ecket_revamp.rar/file",
+      "https://www.mediafire.com/file/v7y9r3325cu3ibs/RAEFFY+BLUE.zip/file",
+      "https://www.mediafire.com/file/yitqtqv76kzhdey/SEN_WAOPAO_%25282%2529.zip/file",
+      "https://www.mediafire.com/file/lg26drwokpdy60k/%25C2%25A7b%25C2%25A7L%25C2%25A7nSaskia_x32.zip/file",
+      "https://www.mediafire.com/file/dh05d8uo5941d9m/verish_mashtest_.zip/file",
+      "https://www.mediafire.com/file/6yzk02a6puijdnn/Knife_Talk_Private_Revamp.zip/file",
+      "https://www.mediafire.com/file/e04n7cyrit9vpj9/cold_revamp.rar/file",
+      "https://www.mediafire.com/file/7cjeu5qk0yypkbp/9aWrld_9999.zip/file",
+      "https://www.mediafire.com/file/s4x66znkiouxoq4/mashup.zip/file",
+      "https://www.mediafire.com/file/8z8f7y2egnet311/%2521_%25C2%25A7fserenity%25C2%25A7l.zip/file",
+      "https://www.mediafire.com/file/oia9fgsbmyrpws2/%25C2%25A71Versax_%25C2%25A74Eum3.zip/file",
+      "https://www.mediafire.com/file/osefmdknitgdmf8/%25C2%25A73Nevio_%25C2%25A78Eum3.zip/file",
+      "https://www.mediafire.com/file/m7db43psgdd81me/%2521_%25C2%25A7cemdeeel_%25C2%25A7flongswords.zip/file",
+      "https://www.mediafire.com/file/4dbd8bsn8dsn27k/%25C2%25A7lHEY_%255EV%255E.zip/file",
+      "https://www.mediafire.com/file/o7dd1ga2i00a85g/%25C2%25A7cOni.zip/file",
+      "https://www.mediafire.com/file/d7gwuozmgbbzplg/rolt+private.zip/file",
+      "https://www.mediafire.com/file/xb3ssteb11kmzp4/%C2%A72Krikoo%27s+Mashup%C2%A75.zip/file",
+      "https://www.mediafire.com/file/m6k7m2hus9kc2nl/meow_private.zip/file",
+      "https://www.mediafire.com/file/trnmk0wdwsx21eq/dramuh%2527s_ocn_edit.zip/file",
+      "https://www.mediafire.com/file/xv3h26igxng2vyb/Rolt_particle_diff.zip/file",
+      "https://www.mediafire.com/file/te86dhk1le156eb/%25C2%25A7cEden_PRIVATE.zip/file",
+      "https://www.mediafire.com/file/2m92kd53q7cqheg/%25C2%25A71Oden_-_Eum3_%25C2%25A78%255B16x%255D%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/zksi55ds5vvp8ge/%2521_%25C2%25A74%25C2%25A7lHitReg_%25C2%25A7r%25C2%25A76%255BPRIVATE%255D.zip/file",
+      "https://www.mediafire.com/file/svp5zrwne4q2b36/Alvis_32x.rar/file",
+      "https://www.mediafire.com/file/husi28mglq6cs30/%25C2%25A7a%25C2%25A7lreyan_faith.zip/file",
+      "https://www.mediafire.com/file/kyy7lbw0d4xezsv/%2521_%25C2%25A78%25C2%25A7L%25C2%25A7nPlzFightMe_%25C2%25A77%255B%25C2%25A7532x%25C2%25A77%255D.zip/file",
+      "https://www.mediafire.com/file/hjrpowl487vdp31/rank_bedwar_is_lame_%255B32x%255D.zip/file",
+      "https://www.mediafire.com/file/dcwnavezdqo1fr5/%25C2%25A79New_Style_Blue.zip/file",
+      "https://www.mediafire.com/file/1hfxoczeb0lgwcz/%25C2%25A72Verde_%25C2%25A73Oceano_%25C2%25A7732x.zip/file",
+      "https://www.mediafire.com/file/mjxrx4lgad5k74m/%2521_%25C2%25A77Necrotic%25C2%25A70%255B%25C2%25A78128x%25C2%25A70%255D%25C2%25A70.zip/file",
+      "https://www.mediafire.com/file/exlideyj51jx975/scar.zip/file",
+      "https://www.mediafire.com/file/kmcj03ln42unqno/%25C2%25A77sleepy.zip/file",
+      "https://www.mediafire.com/file/knnlqej0gul7byu/%25C2%25A7d%25C2%25A7li_luv_u_%255Ev%255E.zip/file",
+      "https://www.mediafire.com/file/lxoo6q6qtg2vud0/%25C2%25A73Ice.zip/file",
+      "https://www.mediafire.com/file/mhwfybqpyam6elf/Navial_32x.zip/file",
+      "https://www.mediafire.com/file/utqujliea1zwo9l/Dried_OUT.zip/file",
+      "https://www.mediafire.com/file/gek5mn319m7bc0h/%2521_%25C2%25A7b%25C2%25A7lTop_bridge_edit%25C2%25A77.zip.zip/file",
+      "https://www.mediafire.com/file/m7qs64i803x1vza/9olliebear.zip/file",
+      "https://www.mediafire.com/file/4wn8kd4rgtqvbmv/LACREATURE_GRAAAAAAANNDD.zip/file",
+      "https://www.mediafire.com/file/8y2dnqu01ypy6jp/GandalfSwagInc%2527s_Mash_%2521_%2521.zip/file",
+      "https://www.mediafire.com/file/6gd76sncksbcuo8/%25C2%25A7d%25C2%25A7b%25C2%25A7lMatched_%25C2%25A78%25C2%25A7o%25C2%25A7l32x.zip/file",
+      "https://www.mediafire.com/file/dwlb3w0uc65um17/Mashup_pack_55.zip/file",
+      "https://www.mediafire.com/file/b30rrfj58wkx5pj/%2521_%25C2%25A74%25C2%25A7kf_%25C2%25A7c%25C2%25A7lelegance_%25C2%25A74%25C2%25A7kf.zip/file",
+      "https://www.mediafire.com/file/l8ap8pyc7olmyq1/%2521_%25C2%25A74%25C2%25A7kf_%25C2%25A7c%25C2%25A7larrogance_%25C2%25A74%25C2%25A7kf.zip/file",
+      "https://www.mediafire.com/file/it17vrggmw7rp70/Aphotic+Red+16x+(burn+edit)+Slanted.rar/file",
+      "https://www.mediafire.com/file/w1j5am0czjvjpof/%2521_%25C2%25A74%25C2%25A7lRed_Tiger_%25C2%25A7c%25C2%25A7l512x_%2528burn_edit%2529.rar/file",
+      "https://www.mediafire.com/file/82t73y84fz3z5zc/%2521__%25C2%25A7cNohuh_%25C2%25A7a30k_THICC_SWORD_%2528burn_edit%2529.rar/file",
+      "https://www.mediafire.com/file/0d4gku932d3xbnn/burn+private+sword+overlay.rar/file",
+      "https://www.mediafire.com/file/oz44uq6zrd56a5n/burn+private+sword+overlay+3.rar/file",
+      "https://www.mediafire.com/file/gxy0inf4k9mnsne/burn+private+sword+overlay+4.rar/file",
+      "https://www.mediafire.com/file/ii93z1907shod8j/%C2%A74Burn+%C2%A7fMash+#1.rar/file",
+      "https://www.mediafire.com/file/ev0ihokhxne0vl4/washed+up+prac+warrior+(burn+edit).rar/file",
+      "https://www.mediafire.com/file/boj4jxsgsf16hux/%C2%A74Burn+%C2%A7fMash+#2.zip/file",
+      "https://www.mediafire.com/file/ki2aobnfrf9cyua/%C2%A74Burn+%C2%A7fMash+#2+(alt+particles).zip/file",
+      "https://www.mediafire.com/file/9pltnvr5mh92gk8/%C2%A74Burn+%C2%A7fFaithful+v2.zip/file",
+      "https://www.mediafire.com/file/9d4ljdvkmk8xzz6/%2521_%25C2%25A75_NEVER_SLEEP.zip/file",
+      "https://www.mediafire.com/file/pfgnbyenen7bz6h/%C2%A79++Purple+Navy+32x.zip/file",
+      "https://www.mediafire.com/file/hojntapairmgdsa/%2521_%25C2%25A71Zedd.zip/file",
+      "https://www.mediafire.com/file/wi3r0xx1e0y4a8s/Curse_Mark_Private.zip/file",
+      "https://www.mediafire.com/file/2yip7hzsuubzjwn/%25C2%25A75Purple_Moon.zip/file",
+      "https://www.mediafire.com/file/850z2a8ko8fpv52/Asda_32x_revamp.zip/file",
+      "https://www.mediafire.com/file/o83vaj7zkye1hy9/Soar.zip/file",
+      "https://www.mediafire.com/file/8zlmug9o8bcu5o5/%25C2%25A79Steve_%25C2%25A7IEum3.zip/file",
+      "https://www.mediafire.com/file/tj7wjz3mpwkuxnh/Flare_32x_Revamp.zip/file",
+      "https://www.mediafire.com/file/oi5zmvca76xtsgb/Sword_overlay_1.zip/file",
+      "https://www.mediafire.com/file/lloe8cjowpk1zxd/Sword_overlay_2.zip/file",
+      "https://www.mediafire.com/file/dms95kpp3tqct3s/Sword_overlay_3.zip/file",
+      "https://www.mediafire.com/file/lsg9g50nr09o0gx/Sword_Overlay_4.zip/file",
+      "https://www.mediafire.com/file/9mofgn4c6wdo421/YUOPPPP_PRIV.zip/file",
+      "https://www.mediafire.com/file/xmoik3ijdbra1rv/Knife_Talk_Private.zip/file",
+      "https://www.mediafire.com/file/k8lmjn20z4vbnug/Knife_Talk_Private_%2528novis_sword%2529.zip/file",
+      "https://www.mediafire.com/file/y4xxjcirj3lhgh8/Feel_The_Sunset.zip/file",
+      "https://www.mediafire.com/file/s9hyvcwbxx324xk/Pogstevewevey_x_Trollewollyyy.zip/file",
+      "https://www.mediafire.com/file/ep41uw017x5j365/%25C2%25A78Tilt.zip/file",
+      "https://www.mediafire.com/file/z6siv79ge8smmwt/%25C2%25A74Vengeance_%25C2%25A7c64x.zip/file",
+      "https://www.mediafire.com/file/84l8vqfk6scrkx8/Stevie_Wonder_32x.zip/file",
+      "https://www.mediafire.com/file/pdbebimettwlzde/tkm.zip/file",
+      "https://www.mediafire.com/file/l446mrkht0s9n3r/30.zip/file",
+      "https://www.mediafire.com/file/9qgdf2a7cn87vtu/%2521_%25C2%25A75%25C2%25A7lMarc_PRIVATE.zip/file",
+      "https://www.mediafire.com/file/jyq1564f0a0bia3/%25C2%25A75Purple_Moon_Revamp.zip/file",
+      "https://www.mediafire.com/file/feojjqoz3cz4n95/%2521_%25C2%25A7c%25C2%25A7kfaa_%25C2%25A7FFireflies_%25C2%25A7c%25C2%25A7kf.zip/file",
+      "https://www.mediafire.com/file/utvrpzesqw9tjjh/%25C2%25A74%25C2%25A7lSusanoo.zip/file",
+      "https://www.mediafire.com/file/8ftqtlwo740zzs7/%2521_%25C2%25A7fLudociel.zip/file",
+      "https://www.mediafire.com/file/1712jbmfp1zip44/%2521_%25C2%25A7bTarmiel.zip/file",
+      "https://www.mediafire.com/file/y6b1ws8px6q2qtq/%2521_%25C2%25A76Mael.zip/file",
+      "https://www.mediafire.com/file/9vt9ycw4c6oki7s/%2521__%25C2%25A78Sariel.zip/file",
+      "https://www.mediafire.com/file/kumk766f5usruxe/%2521_%25C2%25A73Typa_%25C2%25A7916x_%25C2%25A71Revamp.zip/file",
+      "https://www.mediafire.com/file/53bjj7vup5h0y03/%2521_%25C2%25A73Bedwars_x_Amaranth_Revamp_%25C2%25A78%255B%25C2%25A7f32x%25C2%25A78%255D.zip/file",
+      "https://www.mediafire.com/file/h33i0i8we0yjhib/%2521_%25C2%25A74Stimpy_Private_Revamp.zip/file",
+      "https://www.mediafire.com/file/twp2bc308srit8w/ridiculous_mashup.zip/file",
+      "https://www.mediafire.com/file/x1447pjcor979tb/%2521boob_revamp.zip/file",
+      "https://www.mediafire.com/file/odkc6oiincz3jc7/%2523%25C2%25A75Violet_Mash.zip/file",
+      "https://www.mediafire.com/file/mt8zqlhjkp7w3hh/%25C2%25A76_Hytaler_%25C2%25A71%255B32x%255D.zip/file",
+      "https://www.mediafire.com/file/d6fvgcvfffj8hak/%C2%A7b%C2%A7leev4MP.zip/file",
+      "https://www.mediafire.com/file/12xioq714mb8f1i/%C2%A7cRaspberry+%C2%A75Private.zip/file",
+      "https://www.mediafire.com/file/fpnauv6aqic381h/%2521%25C2%25A7bS0CKERS_V2_%25C2%25A78%255B%25C2%25A7f32%25C2%25A7fx%25C2%25A78%255D.zip/file",
+      "https://www.mediafire.com/file/xob46n7tea2yhfk/Pogstevewevey_x_Trollewollyyy_edit.zip/file",
+      "https://www.mediafire.com/file/gfgsb1hqli8qec7/%2521__%25C2%25A79Deep_Ocean_Blue_16x_FPS_edit.zip/file",
+      "https://www.mediafire.com/file/s8x9zo3axkzu58k/Infinity%255B16x%255D.zip/file",
+      "https://www.mediafire.com/file/xtf4kovmtpaevps/%2521_valentine.zip/file",
+      "https://www.mediafire.com/file/hteyq2u1girpc1p/iSparktonGarn.zip/file",
+      "https://www.mediafire.com/file/hs1ikmgla61awf7/Mint_%255B32x%255D.zip/file",
+      "https://www.mediafire.com/file/k0u0ygv66aaxobn/Aphotic_X_Amaranth_%255B32x%255D_Edit.zip/file",
+      "https://www.mediafire.com/file/gcq1avox9cbpf57/%2521_%25C2%25A79sapphire.zip/file",
+      "https://www.mediafire.com/file/cb8ktwj812cctqk/%2521_%25C2%25A7cerratic_is_%25C2%25A74sexy_%25C2%25A78%255B%25C2%25A7f32%25C2%25A77x%25C2%25A78%255D.zip/file",
+      "https://www.mediafire.com/file/3j2nmod48u9poye/%2521_Kyzuko_32x.zip/file",
+      "https://www.mediafire.com/file/n5sc7t8hquxc5rp/%2521_%25C2%25A79%25C2%25A7lNightables_Private.zip/file",
+      "https://www.mediafire.com/file/4zt6hg5h2y77ln0/%25C2%25A7l%25C2%25A74_DONT_LOG_%25C2%25A7c%255B64x%255D.zip/file",
+      "https://www.mediafire.com/file/yt7ws86i6eg1c4n/%25C2%25A78Hit%25C2%25A77Select_%25C2%25A70%255B32x%255D.zip/file",
+      "https://www.mediafire.com/file/2n8ottsc8sz9zj6/%25C2%25A7L_%25C2%25A71Sonic_Wave_%25C2%25A70%255B32x%255D.zip/file",
+      "https://www.mediafire.com/file/a1g36ey2uywtae9/%2521_%25C2%25A72%25C2%25A7l_Zodiac_%25C2%25A7f%255B%25C2%25A7a32%25C2%25A78x%25C2%25A7f%255D%25C2%25A72.zip/file",
+      "https://www.mediafire.com/file/m2qft13xo0snkkx/%25C2%25A7l%25C2%25A74_DONT_LOG_%25C2%25A7c%255BSlim_64x%255D.zip/file",
+      "https://www.mediafire.com/file/uwumu79qj0ioggm/%25C2%25A74Cataclysm_%25C2%25A70%255B16x%255D.zip/file",
+      "https://www.mediafire.com/file/8er11qwyi167mrt/%25C2%25A71Artificial_%25C2%25A76Ascent_%25C2%25A7f%255B32%25C2%25A70x%255D.zip/file",
+      "https://www.mediafire.com/file/gsrupkqpwgl0nca/Sword_Overlay_9.zip/file",
+      "https://www.mediafire.com/file/a7y3951a3p27vbd/Sword_Overlay_8.zip/file",
+      "https://www.mediafire.com/file/39vyyi5przjnex6/%C2%A7b%C2%A7lFlare+%C2%A7fMash+%C2%A771.zip/file",
+      "https://www.mediafire.com/file/o43nhl7ol4yzu6e/%2521_%25C2%25A7d%25C2%25A7lFlare_%25C2%25A7fMash_%25C2%25A7d2.zip/file",
+      "https://www.mediafire.com/file/4co3mis8dynd9ti/%2521_%25C2%25A7d%25C2%25A7lFlare_%25C2%25A7fMash_%25C2%25A7d2_%2528fps_boost%2529.zip/file",
+      "https://www.mediafire.com/file/vc919zvs1lofc8f/Sword_Overlay_10.zip/file",
+      "https://www.mediafire.com/file/o0gm96oe264lula/Sword_Overlay_13.zip/file",
+      "https://www.mediafire.com/file/hcqwieh1fkw7nxz/%C2%A7dflare+%C2%A7fmash+%C2%A7f#3.zip/file",
+      "https://www.mediafire.com/file/0bfl86h52j5jc8h/%C2%A7dflare+%C2%A7fmash+%C2%A7f#3+v2.zip/file",
+      "https://www.mediafire.com/file/jkdc0bhiuij2tq5/%C2%A79flare+%C2%A7fmash+%C2%A79#5.zip/file",
+      "https://www.mediafire.com/file/1qlrss1vyh99aec/%C2%A7dflare+%C2%A7fmash+%C2%A7f#3.zip/file",
+      "https://www.mediafire.com/file/obktkdbsbk8352g/%2521_%25C2%25A75Hit_%25C2%25A78%255B%25C2%25A7fFat%25C2%25A78%255D%25282%2529.zip/file",
+      "https://www.mediafire.com/file/lub20d7ldn7mx68/%2521_%25C2%25A75Hit_%25C2%25A78%255B%25C2%25A7fSlim%25C2%25A78%255D.zip/file",
+      "https://www.mediafire.com/file/iiytgu7qc9ljogl/%2521_%25C2%25A78smoothie_%25C2%25A78%255B%25C2%25A7716x%25C2%25A78%255D.zip/file",
+      "https://www.mediafire.com/file/72r98qp4ldtpr5i/%2521_%25C2%25A74daddy_dawn.zip/file",
+      "https://www.mediafire.com/file/3iw3fny2twr1igj/%2521_%25C2%25A72%25C2%25A7lCAMELOT_%25C2%25A70%255B%25C2%25A7832x%25C2%25A70%255D%25C2%25A77.zip/file",
+      "https://www.mediafire.com/file/xajc5hoh2xm6p9w/%2521_%25C2%25A7b%25C2%25A7lClean_%25C2%25A77%25C2%25A7oPrivate.zip/file",
+      "https://www.mediafire.com/file/0ym4zs3c4conkg7/%2521_%25C2%25A7f%25C2%25A7lWhite%25C2%25A7b%25C2%25A7lAngel%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/bgnfqx74gcyxgaw/%2521_%25C2%25A78%25C2%25A7lBlack%25C2%25A74%25C2%25A7lDemon%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/e20kl2xzaxhde9h/%2521__f%2Ack_a_hoe_%25C2%25A78%25C2%25A7l%255B%25C2%25A7f%25C2%25A78V2%25C2%25A7l%255D%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/3bs68kya74kge3t/%2521_Noname.zip/file",
+      "https://www.mediafire.com/file/n9zprvbi1obz128/%2521_%25C2%25A79%25C2%25A7lmiguell_priv.zip/file",
+      "https://www.mediafire.com/file/su40d8dvpojdj79/%2521_%25C2%25A7cNation%25C2%25A7dwide.zip/file",
+      "https://www.mediafire.com/file/ygik0djhi3qyp4e/%2521_%25C2%25A7l%25C2%25A791ge_private%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/9cop125qumbn3q2/%2521_%25C2%25A7l%25C2%25A761ge_%25C2%25A7n%25C2%25A7b1%25C2%25A740%25C2%25A7d0%25C2%25A7e0_%25C2%25A7cS%25C2%25A7fub%25C2%25A7cs_%25C2%25A72pack.zip/file",
+      "https://www.mediafire.com/file/evdl35n10g470ib/%2521_%25C2%25A74%25C2%25A7lSNITCH%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/q2pxeust35hwqkc/%2521_%25C2%25A7b%25C2%25A7lLevitation_%25C2%25A79%255B32x%255D%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/a5ec7ibq7xol51a/%2521__%25C2%25A74%25C2%25A7o%25C2%25A7lFronga_%25C2%25A7r%25C2%25A78PRIVATE%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/yoe29w9whbymbbs/%2521_%25C2%25A71azura_%25C2%25A78%255B%25C2%25A7fRevamp%25C2%25A78%255D..zip/file",
+      "https://www.mediafire.com/file/d92o2m5cvyzokng/%2521_%25C2%25A7f%25C2%25A7lPAYDAY%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/5fp5njn02wakf8r/%2521__%25C2%25A7cDamage_%25C2%25A7r%25C2%25A77%255B%25C2%25A74%25C2%25A7l128x%25C2%25A7r%25C2%25A77%255D%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/yk0e1ywkc82pk7x/%2521_%25C2%25A7c%25C2%25A7lRUSHED_%25C2%25A77%255B%25C2%25A74%25C2%25A7l32x%25C2%25A77%255D%25C2%25A77.zip.zip/file",
+      "https://www.mediafire.com/file/h41ckobx25z3o9n/%2521_%25C2%25A7cWine_%25C2%25A77%255B%25C2%25A74%25C2%25A7l32x%25C2%25A77%255D%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/p0rc9v8phhg92kr/%25C2%25A7bC1X3_%25C2%25A77%255B%25C2%25A7b16x%25C2%25A77%255D.zip/file",
+      "https://www.mediafire.com/file/ws0esdqzhvy0bvy/%25C2%25A7bZaffre%2521_%25C2%25A78%255B%25C2%25A7716x%25C2%25A78%255D.zip/file",
+      "https://www.mediafire.com/file/f53m246g1z1ydr2/default_priv.zip/file",
+      "https://www.mediafire.com/file/kiequd9kkz69aoy/Riptide+FPS+(UNZIP).zip/file",
+      "https://www.mediafire.com/file/hzc9uv6ztp3ztts/Riptide+32x+FPS+(UNZIP).zip/file",
+      "https://www.mediafire.com/file/0218a8nue54wmjx/Heaven_32x_%2528UNZIP%2529.zip/file",
+      "https://www.mediafire.com/file/fzjo0t5h2pq7loe/%C2%A7l%C2%A71C1%C2%A7l%C2%A70x%C2%A7l%C2%A71FPS%C2%A77.zip/file",
+      "https://www.mediafire.com/file/d6tbhxiinq8r5lo/Private_Brown_16x.rar/file",
+      "https://www.mediafire.com/file/9yu0qp540zprl4p/%2521_%25C2%25A7bLightBlue_%25C2%25A73%255B%25C2%25A7f16%25C2%25A7bx%25C2%25A73%255D%25C2%25A7f.rar/file",
+      "https://www.mediafire.com/file/pkqkax9tnam8nn2/%2521_%25C2%25A7bLightBlue_%25C2%25A73%255B%25C2%25A7f16%25C2%25A7bx%25C2%25A73%255D%25C2%25A7f_long_sword.rar/file",
+      "https://www.mediafire.com/file/okgnuzsbcq4aa15/Alvis_Mashup.rar/file",
+      "https://www.mediafire.com/file/xmr17nis7mm8xf3/Alvis_32x.rar/file",
+      "https://www.mediafire.com/file/igchch47fl15k5r/%2521_%25C2%25A73_Blue_Pack_%25C2%25A7832x_long_sword.rar/file",
+      "https://www.mediafire.com/file/uqkdoopi91535sm/%2521_%25C2%25A73_Blue_Pack_%25C2%25A7832x_short_sword.rar/file",
+      "https://www.mediafire.com/file/j2s38f7da3wf8se/%2521_%25C2%25A7bAlvis%25C2%25A73_V2_%25C2%25A78%255B%25C2%25A7f32%25C2%25A75x%25C2%25A78%255D.rar/file",
+      "https://www.mediafire.com/file/vd25jyxe338dezb/%2521_%25C2%25A7bTheBest_%25C2%25A73%255B%25C2%25A7f32%25C2%25A7bx%25C2%25A73%255D%25C2%25A7f.rar/file",
+      "https://www.mediafire.com/file/qjq0x5od7edx533/Private+Red+32x.rar/file",
+      "https://www.mediafire.com/file/taszgnymw2wflr8/%2521_%25C2%25A7bCleanBlue_%25C2%25A73%255B%25C2%25A7f32%25C2%25A7bx%25C2%25A73%255D%25C2%25A7f_Thicc_Sword.rar/file",
+      "https://www.mediafire.com/file/lbn6efuydg24q3y/%2521_%25C2%25A7bCleanBlue_%25C2%25A73%255B%25C2%25A7f32%25C2%25A7bx%25C2%25A73%255D%25C2%25A7f.rar/file",
+      "https://www.mediafire.com/file/peo72tiqitngxs6/DarkBlue_16x.rar/file",
+      "https://www.mediafire.com/file/hfbi1akt4o5lbgh/DarkPurple_32x.rar/file",
+      "https://www.mediafire.com/file/41gu9ly52una3gb/Water_other_sword.rar/file",
+      "https://www.mediafire.com/file/wmzsubn7a55geer/Water.rar/file",
+      "https://www.mediafire.com/file/n3tf9xa5b5r6416/%2521_%25C2%25A79Alvis_%25C2%25A78%255B%25C2%25A7fMash%25C2%25A77%25231%25C2%25A78%255D.rar/file",
+      "https://www.mediafire.com/file/pqtju3ij3x0d13h/%2521_%25C2%25A79Alvis_%25C2%25A78%255B%25C2%25A7fMash%25C2%25A77%25232%25C2%25A78%255D.rar/file",
+      "https://www.mediafire.com/file/hn4sjrten8facym/%25C2%25A72Jungle.rar/file",
+      "https://www.mediafire.com/file/mqdebkliq00ipqx/%C2%A74Red+Dead.zip/file",
+      "https://www.mediafire.com/file/ug7dk549iw4ixli/%C2%A76Ace.zip/file",
+      "https://www.mediafire.com/file/u9reyom8pn87m63/sword+overlay+v1.zip/file",
+      "https://www.mediafire.com/file/4f6ucl8vlfpy05h/sword+overlay+v2.zip/file",
+      "https://www.mediafire.com/file/13nxg0pk31xl4ca/%25C2%25A7dStarburst%2521%25C2%25A7d.zip/file",
+      "https://www.mediafire.com/file/g5eq6o99wnszrj1/%25C2%25A74%25C2%25A7lrosey.exe.rar/file",
+      "https://www.mediafire.com/file/etr2bnpxpha8crx/%C2%A7b%C2%A7lCetus+FPS.rar/file",
+      "https://www.mediafire.com/file/h1r36ekxtwpswx9/%25C2%25A7l%25C2%25A7eSmooth_Wool.rar/file",
+      "https://www.mediafire.com/file/lqiea5ounc5ysko/overlays.rar/file",
+      "https://www.mediafire.com/file/bxbqhi98lkjq5q7/krikool.zip/file",
+      "https://www.mediafire.com/file/iyitajesd0hyn74/%25C2%25A72Krikoo%2527s_Mashup%25C2%25A755.zip/file",
+      "https://www.mediafire.com/file/9nlmi2p0yvqe7t3/part_of_the_krikoo_mandem.zip/file",
+      "https://www.mediafire.com/file/ini27l6tse10z24/%C2%A72Clean%C2%A75.zip/file",
+      "https://www.mediafire.com/file/9fd27s5gfdausuq/available_for_purchase.zip/file",
+      "https://www.mediafire.com/file/io8lkgm15a7ofzd/available_for_purchase_2.zip/file",
+      "https://www.mediafire.com/file/4phanmy9fapmvtr/wonky+sword.zip/file",
+      "https://www.mediafire.com/file/l2db5mki9vpic78/krikoo+x+wish.zip/file",
+      "https://www.mediafire.com/file/1qha30s6heny8v3/clickys+fps+v2.zip/file",
+      "https://www.mediafire.com/file/auvnvtuzdjt65hh/clickys+fps+v2+thin+swords.zip/file",
+      "https://www.mediafire.com/file/51tvt7gll7r9tnw/kirks.zip/file",
+      "https://www.mediafire.com/file/s9etev4b6nhh0yh/boombaclartt+vol.1.zip/file",
+      "https://www.mediafire.com/file/u9agypbtir95e7h/friendos+private.zip/file",
+      "https://www.mediafire.com/file/902ex34p3gdqlc2/ding+dong.rar/file",
+      "https://www.mediafire.com/file/efg8w17v98rd1dp/%2523fah.zip/file",
+      "https://www.mediafire.com/file/jkmkbfgd1lp06l8/knights+priv.zip/file",
+      "https://www.mediafire.com/file/ts9g3xb5ngwadm4/dogefruit+32x.zip/file",
+      "https://www.mediafire.com/file/7pqzz4jwud1ajox/%2521_%25C2%25A74Itachi_%25C2%25A70%255B%25C2%25A74V2%25C2%25A70%255D.zip/file",
+      "https://www.mediafire.com/file/uvo7etzcs90ga3z/%2521_%25C2%25A7f%25C2%25A7lCirithFault_%255BREVAMP%255D.zip/file",
+      "https://www.mediafire.com/file/ft5ga2nlhbmwy1z/%C2%A79Dark+%C2%A78Sapphire.zip/file",
+      "https://www.mediafire.com/file/n2rjcl9vhjb7pp6/%25C2%25A70%255B%25C2%25A7l%25C2%25A7fHurt%25C2%25A7l%25C2%25A7f%255D_%25C2%25A70%255B%25C2%25A7l%25C2%25A7f16X%25C2%25A70%255D.zip/file",
+      "https://www.mediafire.com/file/9j70j0fm02wlmz2/fast_bw_pack.zip/file",
+      "https://www.mediafire.com/file/oxo9mls7hedolac/%2521_%25C2%25A7b%25C2%25A7lYanqui_%25C2%25A77U.%25C2%25A77%25C2%25A7lX.%25C2%25A77O.zip/file",
+      "https://www.mediafire.com/file/pde6qpvfhtbfuzz/%C2%A73+Is+There+Really+A+Mind-.zip/file",
+      "https://www.mediafire.com/file/wpusc4pvq11pz1s/ice_water_v1.zip/file",
+      "https://www.mediafire.com/file/7aqj6lqk8txbig4/typical_hawoi_pack.zip/file",
+      "https://www.mediafire.com/file/jw4wf7bqk7s2se8/umbreon%2521%2521_%255Bv5%255D_ice.zip/file",
+      "https://www.mediafire.com/file/nlqgydtkspoo3cz/lazy_faith_edit.zip/file",
+      "https://www.mediafire.com/file/hq643nir7oco2fa/minty_fps.zip/file",
+      "https://www.mediafire.com/file/8ucmmfsots14c0p/hawoi%2527s_ocn.zip/file",
+      "https://www.mediafire.com/file/5t7l8291hz6wuag/greenpath.zip/file",
+      "https://www.mediafire.com/file/jbbuh6cvqhtwar8/reflection.zip/file",
+      "https://www.mediafire.com/file/spvgcjg904jd81x/infection.zip/file",
+      "https://www.mediafire.com/file/xar4emcsfnw0pvy/velvet_armorite_hawoi_edit.zip/file",
+      "https://www.mediafire.com/file/4ha8kn1sgre8kfr/I_wish_I_knew_you_wanted_me.zip/file",
+      "https://www.mediafire.com/file/b1tu8fbzk23229j/blueberrykartel.zip/file",
+      "https://www.mediafire.com/file/2em5akxc5g8ts74/bloje_revamp.zip/file",
+      "https://www.mediafire.com/file/0dizw4xudg3x4oa/Frog_viper_v2.zip/file",
+      "https://www.mediafire.com/file/28evlafr011gw82/Joshua_eum3.zip/file",
+      "https://www.mediafire.com/file/9f3z3k74bt1ian6/NotSuS16x.zip/file",
+      "https://www.mediafire.com/file/qi1vkxa0gfzwakc/GET+BITCHES+16X.zip/file",
+      "https://www.mediafire.com/file/y7f939i1mtoutjp/F%2ACK_EXAMS_16X.zip/file",
+      "https://www.mediafire.com/file/3oa3f2zdaut9s7a/ANIME_SKY_V2.zip/file",
+      "https://www.mediafire.com/file/hlswoxs2yk5pwvm/Bamboo+16x.zip/file",
+      "https://www.mediafire.com/file/eyskfh4o96dseru/Cake+16x.zip/file",
+      "https://www.mediafire.com/file/1kustamhtc7h572/%C2%A75Purple+32x.zip/file",
+      "https://www.mediafire.com/file/d4obledbpbgkzre/NNN.zip/file",
+      "https://www.mediafire.com/file/yxj9qn8s8c5btxf/sky+idk+maybee.zip/file",
+      "https://www.mediafire.com/file/g11yzphh6xz9yc1/Roswy.zip/file",
+      "https://www.mediafire.com/file/1xgqky28mmz6zpt/Roswy_Ranked_Edit.zip/file",
+      "https://www.mediafire.com/file/w2ldw8h7q9ub6u2/%2521_%25C2%25A7e%25C2%25A7kfaa__%25C2%25A76Z%25C2%25A76ap_%25C2%25A7616%25C2%25A7ex%25C2%25A7e%25C2%25A7kf.zip/file",
+      "https://www.mediafire.com/file/rcwd050bw26vt67/claret.zip/file",
+      "https://www.mediafire.com/file/grj7z6s8hf73mcp/%25C2v%25A79Blue.zip/file",
+      "https://www.mediafire.com/file/vddrsotrz07fkix/%2521_%25C2%25A79%25C2%25A7lHela.zip/file",
+      "https://www.mediafire.com/file/99obxhejb3anick/%25C2%25A75Purple_Fade.zip/file",
+      "https://www.mediafire.com/file/ili24xsti73vnkz/divot.zip/file",
+      "https://www.mediafire.com/file/xcwfoi22n9vwlgd/%2521_%25C2%25A71%25C2%25A7lkillua_mash.zip/file",
+      "https://www.mediafire.com/file/xv02beig657um19/%2521_%25C2%25A7cCerise_%25C2%25A78%255B16x%255D_edit.zip/file",
+      "https://www.mediafire.com/file/4gwq3ioxaa9lz1o/%25C2%25A7dNixxies%2527s_Mashup.zip/file",
+      "https://www.mediafire.com/file/pkhoq4l73023kt6/%C2%A7dNixxies%27s+Mashup+2.zip/file",
+      "https://www.mediafire.com/file/j08a3a3e4wqx79u/arn%2527s_eum3_edit.zip/file",
+      "https://www.mediafire.com/file/44u077ok36qhd5s/arn%2527s_sword_overlay.zip/file",
+      "https://www.mediafire.com/file/p4perr7omtk5l07/small_sword_render_overlay.zip/file",
+      "https://www.mediafire.com/file/cn7qnr7bhsdho36/Hurtin%2527s_Private_Mash.zip/file",
+      "https://www.mediafire.com/file/f38ulauc4t9fkod/arn%2527s_mash_%25231.zip/file",
+      "https://www.mediafire.com/file/urbbgz0vf4pybj1/Ptb_dante_boxing_ovrelay.zip/file",
+      "https://www.mediafire.com/file/ovet9vvdvjjh342/Riptide+32x+(UNZIP).zip/file",
+      "https://www.mediafire.com/file/y62tsnqa4yepnfr/%25C2%25A7fHeaven_%25C2%25A77%255B%25C2%25A7f32x%25C2%25A77%255D_Revamp_Alt_Particles.zip/file",
+      "https://www.mediafire.com/file/mj8afqtp9va1tg8/Tqkara+INFINITE+32x+(burn+revamp).zip/file",
+      "https://www.mediafire.com/file/cm8jfua7hgbsuj3/%25C2%25A76%2521boombaclartt_mash.zip/file",
+      "https://www.mediafire.com/file/u5s6vng8vfcuntn/%C2%A7bParadise.zip/file",
+      "https://www.mediafire.com/file/e102i4tvf386u7u/%25C2%25A74akira_%25C2%25A78%255B%25C2%25A7f32x%25C2%25A78%255D.zip/file",
+      "https://www.mediafire.com/file/jw8zbwrk6mp1ph4/%25C2%25A74_2shiesty_v2.zip/file",
+      "https://www.mediafire.com/file/qpsgzowcdey61cx/%25C2%25A79LEGIT_%25C2%25A773.4.zip/file",
+      "https://www.mediafire.com/file/3olemn76ddz5bru/%25C2%25A7csunset_mashup.zip/file",
+      "https://www.mediafire.com/file/bj83jw3o1cbmoxk/%25C2%25A702lag_30k_pack.zip/file",
+      "https://www.mediafire.com/file/r017faromlro8kl/%2521_%25C2%25A7o%25C2%25A78shyfault_16x.zip/file",
+      "https://www.mediafire.com/file/2ny9jrqwuqrqpj3/%25C2%25A75%25C2%25A7lHeroin_Overdose_32x.zip/file",
+      "https://www.mediafire.com/file/8m4af77jx35op38/%25C2%25A71%25C2%25A7IRimuru_%25C2%25A77%255B16x%255D.zip/file",
+      "https://www.mediafire.com/file/xkbhb7kb5701xl1/%25C2%25A7c2%25C2%25A75pimp_%25C2%25A78%255B16x%255D.zip/file",
+      "https://www.mediafire.com/file/wf7lj3atzfy9iv3/%2521_playboiclartti_%255B16x%255D.zip/file",
+      "https://www.mediafire.com/file/1ep80zl5ky4zxo3/for_clartt.zip/file",
+      "https://www.mediafire.com/file/ntnr2lm7yrv451j/%2521_%25C2%25A7c%25C2%25A7kfff%25C2%25A7r_%25C2%25A74Flawless_%25C2%25A7c%25C2%25A7kfff%25C2%25A7r%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/zvq9zdd8sivg48c/%25C2%25A77%2523%25C2%25A75charm_%25C2%25A77%255B32x%255D.zip/file",
+      "https://www.mediafire.com/file/o5n1fberw37rffb/%25C2%25A7f%25C2%25A7lShiny_%255B32x%255D.zip/file",
+      "https://www.mediafire.com/file/ehv85rfiitgeue6/%25C2%25A7fBedwars%25C2%25A77%252B.zip/file",
+      "https://www.mediafire.com/file/8e6q5rzed7no25h/%2521_%25C2%25A7f%25C2%25A7l%25C2%25A7ostorm_32x.zip/file",
+      "https://www.mediafire.com/file/fa7jdb8ftcw7l13/%2521_%25C2%25A77ultra%25C2%25A7%25C2%25A77_%25C2%25A78%255B%25C2%25A7f16%25C2%25A7fx%25C2%25A78%255D.zip/file",
+      "https://www.mediafire.com/file/lztaqtbmnq9lae5/%25C2%25A79DNA_Blue_.zip/file",
+      "https://www.mediafire.com/file/tz9uqd90ohiscou/%2521__%25C2%25A7bCot%25C2%25A7dton_%25C2%25A78%255B%25C2%25A7732x%25C2%25A78%255D.zip/file",
+      "https://www.mediafire.com/file/rhnos0ypzxwidd7/%2521__%25C2%25A73Killaura_%25C2%25A79%255B16x%255D.zip/file",
+      "https://www.mediafire.com/file/l2hpndct445qfho/%2521_%25C2%25A79Purify%25C2%25A77.zip/file",
+      "https://www.mediafire.com/file/4h5vo5ou1eqf51g/%2521_%25C2%25A73_Waterfall.zip/file",
+      "https://www.mediafire.com/file/94ktmjacgt0sgzo/%2521_%25C2%25A7c%25C2%25A7lAlaric.zip/file",
+      "https://www.mediafire.com/file/obhlvcgmczlyzwu/%2521_%25C2%25A7b_Bmo_32x.zip/file",
+      "https://www.mediafire.com/file/8uli0lhyq31bm4r/%2521_%25C2%25A7l%25C2%25A74Garnet.zip/file",
+      "https://www.mediafire.com/file/tsrl7xmuplyim0n/%25C2%25A7eCoral.zip/file",
+      "https://www.mediafire.com/file/ji2641xh1yg41o6/%2521_%25C2%25A7b%25C2%25A71Space_%25C2%25A73Blue_%25C2%25A7b%255B16x%255D.zip/file",
+      "https://www.mediafire.com/file/7hm2ik91vz7t05r/DeepSky+Private.zip/file",
+      "https://www.mediafire.com/file/0xtf1p44pv41dv5/%2521_%25C2%25A77PackMaker_%25C2%25A7fKeep_Hope_%25C2%25A78.zip/file",
+      "https://www.mediafire.com/file/yr6hw2yz0o7na8f/Purple+Fault.zip/file",
+      "https://www.mediafire.com/file/7e61054s5vewgyc/%2521_%25C2%25A7cBoo_16x.zip/file",
+      "https://www.mediafire.com/file/qz84dif43qccykv/%2521_%25C2%25A7lHer.zip/file",
+      "https://www.mediafire.com/file/75v9ttwy4nnjqpg/%25C2%25A7fEmdeeel_%25C2%25A74Private.zip/file",
+      "https://www.mediafire.com/file/brwyp7fcgp0qnd1/%2521_%25C2%25A7lHEY_%255EV%255E.zip/file",
+      "https://www.mediafire.com/file/cpffwftr00md882/%2521_%25C2%25A7cemdeeel_%25C2%25A7flongswords.zip/file",
+      "https://www.mediafire.com/file/h2zbzyhgvngoiph/%2521_April_in_paris.zip/file",
+      "https://www.mediafire.com/file/v5citrrp6i0byhx/%25C2%25A76%25C2%25A7l%25C2%25A7ofall.zip/file",
+      "https://www.mediafire.com/file/0mwk2bq5a798vw0/%2521_%25C2%25A7dBlush_%255B32x%255D.rar/file",
+      "https://www.mediafire.com/file/04xzn2c186kfu3u/%25C2%25A0Brunette_%25C2%25A78%255B%25C2%25A7f32x%25C2%25A78%255D.rar/file",
+      "https://www.mediafire.com/file/paxvigc4mke0yt7/%2521_%25C2%25A71%25C2%25A7lMus%25C2%25A79%25C2%25A7lubi_%25C2%25A78%25C2%25A7l%255B%25C2%25A75%25C2%25A7l16x%25C2%25A78%25C2%25A7l%255D.zip/file",
+      "https://www.mediafire.com/file/lfm2q2z1k6bdhym/Exclusive.zip/file",
+      "https://www.mediafire.com/file/5ihivnllhza871e/%2521__%25C2%25A78Sariel.zip/file",
+      "https://www.mediafire.com/file/m5jgp4hn4dhjz5a/%2521_%25C2%25A76Mael.zip/file",
+      "https://www.mediafire.com/file/wdctwnilirjax1o/%2521_%25C2%25A7bTarmiel.zip/file",
+      "https://www.mediafire.com/file/q21avs1djwyahaz/%2521_%25C2%25A7fLudociel.zip/file",
+      "https://www.mediafire.com/file/swgkz4883dz2p2w/%25C2%25A7bSlayer.zip/file",
+      "https://www.mediafire.com/file/6g4dnpnqu25cwaf/%C2%A72Alcohol+%C2%A77",
+      "https://www.mediafire.com/file/63nxd3plrd18qki/Aphotic+16x+edit.zip/file",
+      "https://www.mediafire.com/file/s66jtgvw87hlsw2/%C2%A79Aphotic+16x+Edit.zip/file",
+      "https://www.mediafire.com/file/h3nha4zmba186hv/%2523%25C2%25A7aVirtual%25C2%25A7614_%25C2%25A7eEUM3_%25C2%25A70Black.zip/file",
+      "https://www.mediafire.com/file/9iduh3zcxodozvs/%25C2%25A7fYzua_Smooth.zip/file",
+      "https://www.mediafire.com/file/jorzgsntb02aeuv/%25C2%25A75vulcz_%25C2%25A78%25C2%25A7lPRIVATE.zip/file",
+      "https://www.mediafire.com/file/scfq6fepzb3einp/%2521_%25C2%25A74vermillion_%25C2%25A78%255B32x%255D.zip/file",
+      "https://www.mediafire.com/file/h9en9ddvg785kk2/j_edit.zip/file"
+    ];
+
+    let currentFilter = 'all';
+
+    function cleanFilename(url) {
+      const parts = url.split('/');
+      let name = parts[parts.length - 1];
+      if (name === 'file' || name === '') {
+        name = parts[parts.length - 2] || 'unknown';
+      }
+
+      try {
+        name = decodeURIComponent(name);
+        name = decodeURIComponent(name);
+      } catch (e) {}
+
+      name = name.replace(/\.(zip|rar)(\.zip)?$/i, '');
+      return name;
+    }
+
+    function getResolution(name) {
+      const match = name.match(/(16|32|64|128|256|512)\s*x/i) || name.match(/x\s*(16|32|64|128|256|512)/i);
+      return match ? match[1].toLowerCase() + 'x' : 'Unknown';
+    }
+
+    function parseMcFormatting(str) {
+      let cleanStr = str.replace(/_/g, ' ').replace(/\+/g, ' ');
+      let tokens = cleanStr.split(/(§[0-9a-fk-or])/gi);
+      
+      let html = '';
+      let currentClasses = [];
+
+      tokens.forEach(token => {
+        if (token.startsWith('§') && token.length === 2) {
+          let code = token[1].toLowerCase();
+          if (code === 'r') {
+            currentClasses = [];
+          } else {
+            currentClasses.push('mc-' + code);
+          }
+        } else if (token.length > 0) {
+          if (currentClasses.length > 0) {
+            html += `<span class="${currentClasses.join(' ')}">${escapeHtml(token)}</span>`;
+          } else {
+            html += escapeHtml(token);
+          }
+        }
+      });
+
+      return html || escapeHtml(cleanStr);
+    }
+
+    function getRawText(str) {
+      return str.replace(/§[0-9a-fk-or]/gi, '').replace(/_/g, ' ').replace(/\+/g, ' ');
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    const packData = rawLinks.map(url => {
+      const filename = cleanFilename(url);
+      return {
+        url: url,
+        filename: filename,
+        rawText: getRawText(filename),
+        htmlTitle: parseMcFormatting(filename),
+        res: getResolution(filename)
+      };
+    });
+
+    function renderPacks() {
+      const grid = document.getElementById('packGrid');
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      
+      grid.innerHTML = '';
+      let count = 0;
+
+      packData.forEach(pack => {
+        const matchesSearch = pack.rawText.toLowerCase().includes(search);
+        let matchesFilter = true;
+
+        if (currentFilter === '16x') matchesFilter = pack.res === '16x';
+        else if (currentFilter === '32x') matchesFilter = pack.res === '32x';
+        else if (currentFilter === '64x') matchesFilter = pack.res === '64x';
+        else if (currentFilter === '128x+') matchesFilter = ['128x', '256x', '512x'].includes(pack.res);
+
+        if (matchesSearch && matchesFilter) {
+          count++;
+          const card = document.createElement('div');
+          card.className = 'pack-card';
+          
+          const isRar = pack.url.endsWith('.rar/file');
+          const extBadge = isRar ? '<span class="badge">.rar</span>' : '<span class="badge">.zip</span>';
+          const resBadge = pack.res !== 'Unknown' ? `<span class="badge badge-res">${pack.res}</span>` : '';
+
+          card.innerHTML = `
+            <div>
+              <div class="pack-title">${pack.htmlTitle}</div>
+              <div class="pack-meta">
+                ${resBadge}
+                ${extBadge}
+              </div>
+            </div>
+            <a href="${pack.url}" target="_blank" class="download-btn">Download (MediaFire)</a>
+          `;
+          grid.appendChild(card);
+        }
+      });
+
+      document.getElementById('packCount').innerText = `${count} Packs Shown`;
+    }
+
+    function setFilter(filter, btn) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderPacks();
+    }
+
+    function filterPacks() {
+      renderPacks();
+    }
+
+    // Initial render
+    renderPacks();
+  </script>
+</body>
+</html>
